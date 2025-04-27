@@ -23,7 +23,7 @@ class Table(models.Model):
     available = models.BooleanField(default=True)
 
     def __str__(self):
-        return f"Table number: {self.number} - {self.available}"
+        return f"Table number: {self.number}"
     
 class Order(models.Model):
     PENDING = 'P'
@@ -50,3 +50,6 @@ class Order(models.Model):
 class OrderItems(models.Model):
     food = models.ForeignKey(Food, on_delete=models.PROTECT)
     order = models.ForeignKey(Order, on_delete=models.PROTECT)
+
+    def __str__(self):
+        return f"{self.order} - {self.food}"
