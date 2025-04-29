@@ -24,7 +24,7 @@ def list_category(request):
         })
 
 # fetch single data
-@api_view(['GET', 'DELETE', 'PUT'])
+@api_view(['GET', 'DELETE', 'PUT', 'PATCH'])
 def category_detail(request, id):
     if request.method == 'GET':
         # load data from the database with id
@@ -48,6 +48,15 @@ def category_detail(request, id):
         # convert the JSON into obj
         category = Category.objects.get(id = id)
         serializer = CategorySerializer(category, data = request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response({
+            "detail": "Category Update Successful."
+        })
+    elif request.method == 'PATCH':
+        # convert the JSON into obj
+        category = Category.objects.get(id = id)
+        serializer = CategorySerializer(category, data = request.data, partial=True)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response({
