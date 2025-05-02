@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from rest_framework import status
 from .models import *
 from .serializers import CategorySerializer, FoodSerializer
 
@@ -21,7 +22,7 @@ def list_category(request):
         serializer.save()
         return Response({
             "detail": "New Category Created."
-        })
+        }, status=status.HTTP_201_CREATED)
 
 # fetch single data
 @api_view(['GET', 'DELETE', 'PUT', 'PATCH'])
@@ -43,7 +44,7 @@ def category_detail(request, id):
         category.delete()
         return Response({
             "detail" : "The category has been deleted."
-        })
+        }, status=status.HTTP_204_NO_CONTENT)
     elif request.method == 'PUT':
         # convert the JSON into obj
         category = Category.objects.get(id = id)
@@ -52,7 +53,7 @@ def category_detail(request, id):
         serializer.save()
         return Response({
             "detail": "Category Update Successful."
-        })
+        }, status=status.HTTP_202_ACCEPTED)
     elif request.method == 'PATCH':
         # convert the JSON into obj
         category = Category.objects.get(id = id)
