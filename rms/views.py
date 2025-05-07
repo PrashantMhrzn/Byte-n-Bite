@@ -3,7 +3,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from .models import *
-from .serializers import CategorySerializer, FoodSerializer
+from .serializers import CategorySerializer, FoodSerializer, TableSerializer
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 
@@ -26,6 +26,10 @@ class CategoryAPIView(ModelViewSet):
 class FoodViewset(ModelViewSet):
     queryset = Food.objects.all()
     serializer_class = FoodSerializer
+
+class TableViewset(ModelViewSet):
+    queryset = Table.objects.all()
+    serializer_class = TableSerializer
 
 # class CategoryList(APIView):
     
