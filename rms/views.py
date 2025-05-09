@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from rest_framework import status
+from rest_framework import status, filters
 from .models import *
 from .serializers import CategorySerializer, FoodSerializer, TableSerializer
 from rest_framework.views import APIView
@@ -24,8 +24,11 @@ class CategoryAPIView(ModelViewSet):
         }, status=status.HTTP_204_NO_CONTENT)
 
 class FoodViewset(ModelViewSet):
-    queryset = Food.objects.all()
+    queryset = Food.objects.select_related().all()
+    # queryset = Food.objects.all()
     serializer_class = FoodSerializer
+    filter_backends = (filters.SearchFilter,)
+    search_fields = ('name',)
 
 class TableViewset(ModelViewSet):
     queryset = Table.objects.all()
