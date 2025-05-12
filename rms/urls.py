@@ -6,6 +6,7 @@ router = routers.DefaultRouter()
 router.register(r'category', CategoryAPIView)
 router.register(r'foods', FoodViewset)
 router.register(r'table', TableViewset)
+router.register(r'orders', OrderViewset)
 
 urlpatterns = [
     # path('category', CategoryAPIView.as_view({'get': 'list', 'post': 'create'})),

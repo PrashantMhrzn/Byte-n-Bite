@@ -18,7 +18,7 @@ class LoginAPIView(APIView):
             # gives token and bool, and get or create creates if no user token, gets if user token previously available
             token,_=Token.objects.get_or_create(user = user)
             return Response({
-                "token": token,
+                "token": token.key,
                 "user": user.username
             })
         return Response({

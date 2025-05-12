@@ -3,13 +3,15 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status, filters
 from .models import *
-from .serializers import CategorySerializer, FoodSerializer, TableSerializer
+from .serializers import CategorySerializer, FoodSerializer, TableSerializer, OrderSerializer
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
+from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 
 class CategoryAPIView(ModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
     def destory(self, request, pk):
         category = Category.objects.get(id = pk)
@@ -24,6 +26,8 @@ class CategoryAPIView(ModelViewSet):
         }, status=status.HTTP_204_NO_CONTENT)
 
 class FoodViewset(ModelViewSet):
+    permission_classes = [IsAuthenticatedOrReadOnly]
+
     queryset = Food.objects.select_related().all()
     # queryset = Food.objects.all()
     serializer_class = FoodSerializer
@@ -33,6 +37,12 @@ class FoodViewset(ModelViewSet):
 class TableViewset(ModelViewSet):
     queryset = Table.objects.all()
     serializer_class = TableSerializer
+
+class OrderViewset(ModelViewSet):
+    queryset = Order.objects.prefetch_related('items').all()
+    serializer_class = OrderSerializer
+    permission_classes = [IsAuthenticated]
+
 
 # class CategoryList(APIView):
     

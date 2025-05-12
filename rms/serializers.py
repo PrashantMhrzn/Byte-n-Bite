@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Category, Food, Table
+from .models import Category, Food, Table, Order, OrderItems
 
 
     
@@ -45,7 +45,33 @@ class TableSerializer(serializers.ModelSerializer):
     class Meta:
         model = Table
         fields = ['number', 'available']
-        
+
+
+class OrderItemSerializer(serializers.ModelSerializer):
+    food_id = serializers.PrimaryKeyRelatedField(
+        queryset = Food.objects.all(),
+        source = 'food'
+    )
+    food = serializers.StringRelatedField()
+    class Meta:
+        model = OrderItems
+        fields = ['food_id','food']
+
+class OrderSerializer(serializers.ModelSerializer):
+    user = serializers.HiddenField(default = serializers.CurrentUserDefault())
+    items = OrderItemSerializer(many=True)
+    status = serializers.CharField(read_only=True)
+    payment_status = serializers.CharField(read_only=True)
+    class Meta:
+        model = Order
+        fields = ['user', 'total_price', 'status', 'payment_status', 'items']
+
+    def create(self, validated_data):
+        items_data = validated_data.pop('items')
+        order = Order.objects.create(**validated_data)
+        for items in items_data:
+            OrderItems.objects.create(order=order, food=items['food'])
+        return order
 
 
 # class CategorySerializer(serializers.Serializer):
